@@ -53,18 +53,11 @@ backend/
 
 ### 1️⃣ Install dependencies
 
-```bash
-go mod tidy
-```
+- go mod tidy
 
 ### 2️⃣ Run Server
 
 - go run main.go
-- Server จะรันที่ : http://localhost:8080
-
-### 📘 Swagger UI
-
-- http://localhost:8080/swagger/index.html
 
 ## 📚 API Endpoints
 
@@ -126,14 +119,11 @@ frontend/
 
 ### 1️⃣ Install dependencies
 
-```bash
-npm install
-```
+- npm install
 
 ### 2️⃣ Run Dev Server
-```bash
-npm run dev
-```
+
+- npm run dev
 
 ## 🖼 UI Preview
 
