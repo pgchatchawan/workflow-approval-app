@@ -1,0 +1,211 @@
+basePath: /
+definitions:
+  models.BulkApprovalResponse:
+    properties:
+      approved:
+        example: 2
+        type: integer
+      message:
+        example: approved
+        type: string
+      requested:
+        example: 2
+        type: integer
+      statusCode:
+        example: 200
+        type: integer
+    type: object
+  models.BulkDecisionRequest:
+    properties:
+      document_ids:
+        example:
+        - 6992a066b7e55e55d9d1dd8f
+        items:
+          type: string
+        type: array
+      reason:
+        example: Approved by IT manager
+        type: string
+    type: object
+  models.BulkRejectionResponse:
+    properties:
+      message:
+        example: rejected
+        type: string
+      rejected:
+        example: 2
+        type: integer
+      requested:
+        example: 2
+        type: integer
+      statusCode:
+        example: 200
+        type: integer
+    type: object
+  models.DocumentItemDTO:
+    properties:
+      created_at:
+        example: "2026-02-16T04:58:52Z"
+        type: string
+      doc_no:
+        example: IT03-0001
+        type: string
+      id:
+        example: 6992a40c3fb0b6dcb1857948
+        type: string
+      reason:
+        example: Approved by IT manager
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/models.DocumentStatus'
+        example: PENDING
+      title:
+        example: Access Request
+        type: string
+      updated_at:
+        example: "2026-02-16T04:58:52Z"
+        type: string
+    type: object
+  models.DocumentListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.DocumentItemDTO'
+        type: array
+      statusCode:
+        example: 200
+        type: integer
+    type: object
+  models.DocumentStatus:
+    enum:
+    - PENDING
+    - APPROVED
+    - REJECTED
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusApproved
+    - StatusRejected
+host: localhost:8080
+info:
+  contact: {}
+  description: IT03 document approval workflow (Pending/Approved/Rejected) with reason.
+  title: Workflow Approval API
+  version: "1.0"
+paths:
+  /api/documents:
+    get:
+      consumes:
+      - application/json
+      description: Get documents (optional filter by status)
+      parameters:
+      - description: 'Filter status: PENDING | APPROVED | REJECTED'
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DocumentListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List documents
+      tags:
+      - Documents
+  /api/documents/approval:
+    post:
+      consumes:
+      - application/json
+      description: Approve only documents with status PENDING (cannot approve twice)
+      parameters:
+      - description: Approval payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.BulkDecisionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BulkApprovalResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Approve documents (bulk)
+      tags:
+      - Documents
+  /api/documents/rejection:
+    post:
+      consumes:
+      - application/json
+      description: Reject only documents with status PENDING
+      parameters:
+      - description: Rejection payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.BulkDecisionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BulkRejectionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Reject documents (bulk)
+      tags:
+      - Documents
+  /api/documents/seed:
+    post:
+      description: Insert mock documents for testing (use ?reset=true to clear old
+        data)
+      parameters:
+      - description: Reset collection before seed (true/false)
+        in: query
+        name: reset
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Seed mock documents (dev only)
+      tags:
+      - Documents
+swagger: "2.0"
