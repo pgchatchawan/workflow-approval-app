@@ -46,18 +46,20 @@ backend/
 ├── go.mod
 └── go.sum
 
-
----
-
+```
 ## ⚙️ Setup & Run
 
 ### 1️⃣ Install dependencies
 
-- go mod tidy
+```bash
+go mod tidy
+```
 
 ### 2️⃣ Run Server
 
-- go run main.go
+```bash
+go run main.go
+```
 
 ## 📚 API Endpoints
 
@@ -113,17 +115,20 @@ frontend/
 ├── package.json
 └── tsconfig.json
 
----
-
+```
 ## ⚙️ Setup & Run
 
 ### 1️⃣ Install dependencies
 
-- npm install
+```bash
+npm install
+```
 
 ### 2️⃣ Run Dev Server
 
-- npm run dev
+```bash
+npm run dev
+```
 
 ## 🖼 UI Preview
 
